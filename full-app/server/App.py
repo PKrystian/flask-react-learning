@@ -48,6 +48,11 @@ def get():
     result = articles_schema.dump(all_articles)
     return jsonify(result)
 
+@App.route('/get<id>/', methods=['GET'])
+def get_article(id):
+    article = Article.query.get(id)
+    return article_schema.jsonify(article)
+
 @App.route('/add', methods=['POST'])
 def add_article():
     if request.json is not None:
@@ -61,6 +66,36 @@ def add_article():
         return article_schema.jsonify(new_article)
     else:
         return jsonify({'error': 'No JSON received'})
+    
+@App.route('/update/<id>/', methods=['PUT'])
+def update_article(id):
+    article = Article.query.get(id)
+    if article is not None:
+        if request.json is not None:
+            title = request.json['title']
+            body = request.json['body']
+
+            article.title = title
+            article.body = body
+
+            db.session.commit()
+
+            return article_schema.jsonify(article)
+        else:
+            return jsonify({'error': 'No JSON received'})
+    else:
+        return jsonify({'error': 'Article not found'})
+
+@App.route('/delete/<id>/', methods=['DELETE'])
+def delete_article(id):
+    article = Article.query.get(id)
+    if article is not None:
+        db.session.delete(article)
+        db.session.commit()
+
+        return article_schema.jsonify(article)
+    else:
+        return jsonify({'error': 'Article not found'})
 
 if __name__ == '__main__':
     App.run(debug=params.SERVER_DEBUG)
