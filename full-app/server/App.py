@@ -38,10 +38,12 @@ class ArticleSchema(ma.Schema):
 article_schema = ArticleSchema()
 articles_schema = ArticleSchema(many=True)
 
+# Default route
 @App.route('/', methods=['GET'])
 def home():
     return "Welcome to my Flask app!"
 
+# CRUD routes
 @App.route('/get', methods=['GET'])
 def get():
     all_articles = Article.query.all()
