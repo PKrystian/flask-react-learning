@@ -6,9 +6,9 @@ from flask_cors import CORS
 
 
 App = Flask(__name__)
+CORS(App)
 App.config['SQLALCHEMY_DATABASE_URI'] = params.DATABASE_URI
 App.config['SQLACHEMY_TRACK_MODIFICATIONS'] = False
-CORS(App)
 
 db = SQLAlchemy(App)
 ma = Marshmallow(App)
